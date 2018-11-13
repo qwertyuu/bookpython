@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Book:
     id = None
     renewed = None
@@ -6,4 +9,13 @@ class Book:
     title = None
 
     def print(self):
-        print(f'id:{self.id}\nrenewed:{self.renewed}\ndue_date:{self.due_date}\nauthor:{self.author}\ntitle:{self.title}')
+        print(f'id:{self.id}\n'
+              f'renewed:{self.renewed}\n'
+              f'due_date:{self.due_date}\n'
+              f'author:{self.author}\n'
+              f'title:{self.title}')
+        self.days_remaining()
+
+    def days_remaining(self):
+        decoded_due_date = datetime.strptime(self.due_date, '%d/%m/%y')
+        print(decoded_due_date - datetime.now())

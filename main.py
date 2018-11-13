@@ -1,13 +1,12 @@
-from dotenv import load_dotenv
-
+import pydotenv
 from bibli import Bibli
-
-load_dotenv()
 
 
 def main():
-    b = Bibli()
+    env = pydotenv.Environment(check_file_exists=True)
+    b = Bibli(env.get('CARD_NUMBER'), env.get('PASSWORD'))
     b.hydrate_books()
+    input()
     b.close()
     pass
 
