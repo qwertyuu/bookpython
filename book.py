@@ -19,3 +19,7 @@ class Book:
     def days_remaining(self):
         decoded_due_date = datetime.strptime(self.due_date, '%d/%m/%y')
         print(decoded_due_date - datetime.now())
+
+    @property
+    def due_date_utc(self):
+        return datetime.strptime(self.due_date, '%d/%m/%y').strftime('%Y-%m-%d')
