@@ -49,6 +49,7 @@ class Bibli:
         dom_books = self.driver.find_elements_by_css_selector('.checkoutsLine')
 
         # TODO: Find element with corresponding index (0, 1, 2, etc) as ID detailZone[INDEX] (ex. detailZone0)
+        # ^(need to click it first and wait..!)
         # TITLE IS #detail_biblio0 .INITIAL_TITLE_SRCH
         # AUTHOR IS #detail_biblio0 .PERSONAL_AUTHOR
         # PAGES AND SIZE IS #detail_biblio0 .PHYSICAL_DESC (needs to be parsed)
@@ -61,9 +62,8 @@ class Bibli:
             book_object.renewed = int(dom_book.find_element_by_class_name('checkoutsRenewCount').text)
             book_object.id = dom_book.find_element_by_class_name('checkouts_itemId').text
             book_object.title = dom_book.find_element_by_class_name('hideIE').text
-            book_object.print()
             self.book_objects.append(book_object)
-        print('Books fetched!')
+        print('Books hydrated!')
 
     def close(self):
         self.driver.close()
