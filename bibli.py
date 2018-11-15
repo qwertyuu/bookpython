@@ -66,4 +66,4 @@ class Bibli:
         print('Books hydrated!')
 
     def close(self):
-        self.driver.close()
+        self.driver.quit()

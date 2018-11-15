@@ -1,7 +1,6 @@
 from airtable import Airtable
 import pydotenv
 import datetime
-
 from book import Book
 
 

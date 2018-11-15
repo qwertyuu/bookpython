@@ -15,7 +15,7 @@ Your airtable table name should be `books` (case-sensitive) and have the followi
 
 | Column          |  Type   |
 |-----------------|---------|
-| ID              |  Text   |
+| ID              | Text    |
 | Author          | Text    |
 | Title           | Text    |
 | Pages           | Integer |
