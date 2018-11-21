@@ -4,6 +4,8 @@ Some selenium-based software to monitor your Saguenay library books
 
 `pip install -r requirements.txt`
 
+Create a "logs" folder in the root directory. It will hold all log files and rotate daily.
+
 
 ## Airtable
 
