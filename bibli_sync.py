@@ -4,9 +4,10 @@ import datetime
 from book import Book
 
 
-def sync(airtable: Airtable, local_books):
-    print('Fetching Airtable books...')
+def sync(airtable: Airtable, local_books, logger):
+    logger.debug('Fetching Airtable books...')
     airtable_books = airtable.get_all(view='Active')
+    logger.debug('Airtable books fetched')
     airtable_book_ids = [b['fields']['ID'] for b in airtable.get_all(view='Active')]
     local_book_ids = [b.id for b in local_books]
 
@@ -16,7 +17,7 @@ def sync(airtable: Airtable, local_books):
     for returned_book in returned_books:
         airtable.update(returned_book['id'], {'ReturnedAt': datetime.datetime.now().strftime('%Y-%m-%d')})
     if returned_books:
-        print(f'User has {len(returned_books)} returned books')
+        logger.info(f'User has {len(returned_books)} returned books')
 
     # --- NEW BOOKS ---
     # Books that are in local but not in airtable
@@ -24,7 +25,7 @@ def sync(airtable: Airtable, local_books):
     for new_book in new_books:
         airtable.insert(airtable_book_from_local_book(new_book))
     if new_books:
-        print(f'User has {len(new_books)} new books')
+        logger.info(f'User has {len(new_books)} new books')
 
     # --- STILL BOOKS ---
     # Books that are in local and in airtable
@@ -35,7 +36,7 @@ def sync(airtable: Airtable, local_books):
         corresponding_still_local_book = find_local([still_airtable_book['fields']['ID']], still_local_books)[0]
         airtable.update(still_airtable_book['id'], airtable_book_from_local_book(corresponding_still_local_book))
     if still_book_ids:
-        print(f'User has {len(still_book_ids)} still books')
+        logger.info(f'User has {len(still_book_ids)} still books')
 
 
 def diff(a, b):

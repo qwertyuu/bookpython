@@ -7,19 +7,19 @@ from book import Book
 
 
 class Bibli:
-    def __init__(self, card_number, password):
+    def __init__(self, card_number, password, logger):
         self.driver = webdriver.Chrome()
         self.driver.get("http://sagu.ent.sirsidynix.net/client/fr_FR/formation")
         self.book_objects = []
         self.card_number = card_number
         self.password = password
-        self.login()
+        self.logger = logger
 
     def login(self):
         if self.is_logged_in():
             return
 
-        print('Logging in...')
+        self.logger.debug('Logging in...')
         elem = self.driver.find_element_by_css_selector('.menuLink > a[tabindex="2"]')
         elem.click()
         login_iframe = WebDriverWait(self.driver, 10)\
@@ -32,7 +32,7 @@ class Bibli:
         password.send_keys(self.password)
         password.send_keys(Keys.RETURN)
         WebDriverWait(self.driver, 20).until(lambda driver: driver.find_element_by_id('checkoutsSummary'))
-        print('Logged in!!')
+        self.logger.debug('Logged in!!')
 
     def is_logged_in(self):
         try:
@@ -43,7 +43,7 @@ class Bibli:
 
     def hydrate_books(self):
         self.login()
-        print('Waiting for books to be fetched...')
+        self.logger.debug('Waiting for books to be fetched...')
         locator = self.driver.find_element_by_css_selector('.myAccountLoadingHolder')
         WebDriverWait(self.driver, 10).until(expected_conditions.invisibility_of_element_located(locator))
         dom_books = self.driver.find_elements_by_css_selector('.checkoutsLine')
@@ -63,7 +63,7 @@ class Bibli:
             book_object.id = dom_book.find_element_by_class_name('checkouts_itemId').text
             book_object.title = dom_book.find_element_by_class_name('hideIE').text
             self.book_objects.append(book_object)
-        print('Books hydrated!')
+        self.logger.debug('Books hydrated!')
 
     def close(self):
         self.driver.quit()
