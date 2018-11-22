@@ -1,6 +1,6 @@
 from airtable import Airtable
 import pydotenv
-import datetime
+from datetime import datetime
 from book import Book
 
 
@@ -15,7 +15,7 @@ def sync(airtable: Airtable, local_books, logger):
     # Books that are in airtable but not in local
     returned_books = find_airtable(diff(airtable_book_ids, local_book_ids), airtable_books)
     for returned_book in returned_books:
-        airtable.update(returned_book['id'], {'ReturnedAt': datetime.datetime.now().strftime('%Y-%m-%d')})
+        airtable.update(returned_book['id'], {'ReturnedAt': utc_now()})
     if returned_books:
         logger.info(f'User has {len(returned_books)} returned books')
 
@@ -23,7 +23,9 @@ def sync(airtable: Airtable, local_books, logger):
     # Books that are in local but not in airtable
     new_books = find_local(diff(local_book_ids, airtable_book_ids), local_books)
     for new_book in new_books:
-        airtable.insert(airtable_book_from_local_book(new_book))
+        airtable_book = airtable_book_from_local_book(new_book)
+        airtable_book['BorrowedAt'] = utc_now()
+        airtable.insert(airtable_book)
     if new_books:
         logger.info(f'User has {len(new_books)} new books')
 
@@ -37,6 +39,10 @@ def sync(airtable: Airtable, local_books, logger):
         airtable.update(still_airtable_book['id'], airtable_book_from_local_book(corresponding_still_local_book))
     if still_book_ids:
         logger.info(f'User has {len(still_book_ids)} still books')
+
+
+def utc_now():
+    return datetime.now().strftime('%Y-%m-%d')
 
 
 def diff(a, b):
