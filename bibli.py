@@ -20,18 +20,16 @@ class Bibli:
             return
 
         self.logger.debug('Logging in...')
-        elem = self.driver.find_element_by_css_selector('.menuLink > a[tabindex="2"]')
+        elem = self.driver.find_element_by_css_selector('.loginLink')
         elem.click()
-        login_iframe = WebDriverWait(self.driver, 10)\
-            .until(lambda driver: driver.find_element_by_css_selector('#loginModal > iframe'))
-        self.driver.switch_to.frame(login_iframe)
+        self.driver.implicitly_wait(3)
         username = self.driver.find_element_by_id('j_username')
         username.clear()
         username.send_keys(self.card_number)
         password = self.driver.find_element_by_id('j_password')
         password.send_keys(self.password)
         password.send_keys(Keys.RETURN)
-        WebDriverWait(self.driver, 20).until(lambda driver: driver.find_element_by_id('checkoutsSummary'))
+        WebDriverWait(self.driver, 20).until(lambda driver: driver.find_element_by_css_selector('#libInfoContainer > .welcome'))
         self.logger.debug('Logged in!!')
 
     def is_logged_in(self):
@@ -43,6 +41,8 @@ class Bibli:
 
     def hydrate_books(self):
         self.login()
+        my_file_link = self.driver.find_element_by_css_selector('.menuLink > .loginLink')
+        my_file_link.click()
         self.logger.debug('Waiting for books to be fetched...')
         locator = self.driver.find_element_by_css_selector('.myAccountLoadingHolder')
         WebDriverWait(self.driver, 10).until(expected_conditions.invisibility_of_element_located(locator))
@@ -61,7 +61,7 @@ class Bibli:
             book_object.due_date = dom_book.find_element_by_class_name('checkoutsDueDate').text
             book_object.renewed = int(dom_book.find_element_by_class_name('checkoutsRenewCount').text)
             book_object.id = dom_book.find_element_by_class_name('checkouts_itemId').text
-            book_object.title = dom_book.find_element_by_class_name('hideIE').text
+            book_object.title = dom_book.find_element_by_css_selector('.checkoutsBookInfo a').text
             self.book_objects.append(book_object)
         self.logger.debug('Books hydrated!')
 
