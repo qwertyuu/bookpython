@@ -1,5 +1,5 @@
 # bookpython
-Some selenium-based software to monitor your Saguenay library books
+Some selenium-based software to monitor your Saguenay library books. 
 
 
 `pip install -r requirements.txt`
@@ -25,4 +25,4 @@ Your airtable table name should be `books` (case-sensitive) and have the followi
 | ScheduledReturn | Date    |
 | ReturnedAt      | Date    |
 
-The "updates" will be done automatically.
+The "updates" will be done automatically. This helps in automatic update.
